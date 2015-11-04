@@ -20,7 +20,6 @@ def snakeLadderInput():
     return [snake, ladder]
 
 
-
 def snakeGraph(snake,ladder):
     adjList = {}
     temp = map(str, range(1,101))
