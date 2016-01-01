@@ -8,14 +8,18 @@ typedef struct node{
   int ht;
 }node;
 
+node * insertSimple(node *root, int val);
+int height(node *root);
+node * insert(node *root, int val);
+
 int main()
 {
   return 0;
 }
 
 node * insert(node *root, int val){
-    node *refNode = insertSimple(root,val);
-
+    root = insertBST(root,val);
+    balance(root);
 }
 
 int height(node *root){
@@ -26,32 +30,76 @@ int height(node *root){
     return ans;
 }
 
-node * insertSimple(node *root, int val){
-    node *refNode;
+int balanceFactor(node *root){
+    if(root==0){
+        return 0;
+    }
+    int left = height(root->left);
+    int right = height(root->right);
+
+    return (left-right);
+}
+
+node * balance(node *root){
+    int factor = balanceFactor(root);
+    if (factor > 1) {
+        if(balanceFactor(root->left) > 0){
+            //single Left Rotate
+        }else{
+            //Double Left Rotate
+        }
+    }else if(factor < -1){
+        if(balanceFactor(root->right) < 0){
+            //single right rotate
+        }else{
+            //double right rotate
+        }
+    }
+}
+
+
+
+node * ll_rotate(node *root){
+    node *temp = root->left;
+    root->left = temp->right;
+    temp->right = root;
+    return temp;
+}
+
+
+node * lr_rotate(node *root){
+    node *leftChild = root->left;
+    root->left = rr_rotate(leftChild);
+    return ll_rotate(root);
+}
+
+
+node * rr_rotate(node *root){
+    node *rightChild = root->right;
+    root->right = rightChild->left;
+    rightChild->left = root;
+    return rightChild;
+}
+
+node * rl_rotate(node *root){
+    node *rightChild = root->right;
+    root->right = ll_rotate(rightChild);
+    return rr_rotate(root);
+}
+
+
+
+node * insertBST(node *root, int val){
     if(root == 0){
         node *newNode = new node;
         newNode->val = val;
         root = newNode;
-        refNode = root;
-    }else if(val < node->val){
-        if(node->left == 0){
-            node *newNode = new node;
-            newNode->val = val;
-            node->left = newNode;
-            refNode = node->left;
-        }else{
-            refNode = insertSimple(node->left, val);
-        }
+    }else if(val < root->val){
+        root = insertBST(root->left, val);
     }else{
-        if(node->right == 0){
-            node *newNode = new node;
-            newNode->val = val;
-            node->right = newNode;
-            refNode = node->right;
-        }else{
-            refNode = insertSimple(node->right, val);
-        }
+        root = insertBST(root->right, val);
     }
 
-    return refNode;
+    root->height = height(refNode);
+    return root;
 }
